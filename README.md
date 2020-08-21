@@ -1,2 +1,2 @@
-# Maths-_stuff
+# Maths_stuff
 Just some mathematics stuff
