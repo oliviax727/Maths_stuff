@@ -11,17 +11,13 @@ There are three inputs required. In order, they are:
 - The base you want to convert to (“Output Base”)
 - The number you want to convert (“Input Number”)
 
-The input and output base must be specified in the decimal base. Here are some regexes for the various valid decimal base options:
-``` perl
-$BASE_N =   /\s*[0-9]+\s*/ 
-
-$BASE_Z =/-?$BASE_N/                                                                    # e.g. 0, 021, - 40, -2, 12903210
-$BASE_Q =/-?\s*[0-9]+\s*\/-?\s*[0-9]+\s*/                                                    # e.g. -1/2, - 3 /  6, 12/3
-$BASE_R =/-?\s*([0-9]+\.[0-9]*(\([0-9]+\))?)\s*\/\s*-?\s*([0-9]+\.[0-9]*(\([0-9]+\))?)/      # e.g. - 09302.333 / 33.45(210)
-$BASE_Zi=
-```
+The input and output base must be specified in the decimal base. Bases can 
 
 WORK IN PROGRESS!
+
+## Polynomial solver
+
+In addition to the base converter there is also a polynomial solver. This polynomial sol
 
 
 ## Old Code (2019)
