@@ -12,14 +12,29 @@ There are three inputs required. In order, they are:
 - The number you want to convert (“Input Number”)
 
 The input and output base must be specified in the decimal base. Bases can be of the following format:
-| Type | Format | Examples | Examples (Non-decimal) |
-|--|--|--|--|
-| N | Natural number | `45`, `0`, `00121` | `aF45`, `[34][12][22][1]`, `1000101` |
-| Z | Integer | `-34`, `30` | `-FF0`, `23a6b`, `-[-3][-2]` |
-| Q | Rational number | `1/`, `2/3`, `-4/6` | `abF/xy1`, `[-3][-60]/[22]` |
-| R | Real number | `-654.`, `2.3(4)`, `00891.(23)` | `GgH.`, `[12].[34][36]([-2])` |
-| C | Complex number | `12.2+1j`, `-.4(2)i`, `081.108i-2` | `.+.:i`, `:j-afh/34` |
-| P | Polynomial Number | `x^2+4x+2.1:2`, `(x-2)x:1` | `x^ef-aJjx-z`, `(:j-afh/34)x^3` |
+- Integer
+- Rational
+- Real/Float
+- Complex Number
+- Polynomial Number (i.e. a polynomial string (see below) followed by a :k where k is the specific root)
+
+For bases with magnitude less than 36, and whose radix values are all positive, any number in said base can be written using the characters 0-9 and A-Z. I purposefully did not use lowercase characters as they are reserved for special characters (including i, various transcendental numbers, and balanced ternary/mixed radix systems).
+
+For bases with non-mixed radices whose radix values are greater than 36 OR include negative-values, use `[k]` to indicate any one character where k is a decimal base integer e.g. `[59][11][0]` in sexagesimal is 213060 in decimal.
+
+Special characters include:
+
+| Char | Use | Example |
+|--|--|--|
+| \| | Mixed radix base | `[45][0\|60]` seconds is `r45` minutes |
+| i | Imaginary number | `4+i` |
+| j | Hyperbolic number | `4+i+j` |
+| k | Dual number | `4e-2` |
+| i | Imaginary number | `4+i` |
+| r | Recurring value | `1/3 = 0.r3` |
+| e | Euler's Number | `e = 2.71` |
+| p | Pi | `p = 3.14` |
+| t | Balanced ternary digit | `t = -1` |
 
 ## Polynomial solver
 

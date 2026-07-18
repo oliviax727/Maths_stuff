@@ -4,9 +4,43 @@ def clear_whitespace
 	# Clears all \s in a string with nothing
 end
 
-# Natural number class
-class N
+class Real
+	# A basic real number value
 	attr_accessor :value
+	
+	# Create the value
+	def initialize(value)
+		if value.is_a? String
+			@value = value.from_s
+		elsif value.method_defined? :to_int
+			@value = value.to_int
+		else
+			throw ParseError
+		end
+	end
+	
+	def from_s(value)
+		return eval value
+	end
+	
+	def +(num)
+		return @value + num.value
+	end
+	
+	def -(num)
+		return @value - num.value
+	end
+end
+
+# Natural number class
+class N < Real
+	attr_accessor :value
+	
+	def to_s()
+		return @value.to_s
+	end
+	
+	
 end
 
 # Any number containing digits from 0 to 9 is a valid decimal natural number
@@ -45,7 +79,7 @@ VALID_REAL = /#{VALID_N}|#{VALID_Z}|#{VALID_Q}|#{VALID_R}/x
 # is a valid complex number. Also define a valid imaginary component.
 # VALID_C accepts complex numbers of the form a+bi, ai+b, and ai
 VALID_iR = /#{VALID_REAL}(i|j)/x
-VALID_C = /(#{VALID_REAL}(+|(?=-))#{VALID_iR})|(#{VALID_iR}(+|(?=-))#{VALID_REAL})|(#{VALID_iR})/x
+VALID_C = /(#{VALID_REAL}(\+|(?=-))#{VALID_iR})|(#{VALID_iR}(\+|(?=-))#{VALID_REAL})|(#{VALID_iR})/x
 
 # Combine everything
 VALID_COMPLEX =/#{VALID_C}|#{VALID_REAL}/x
