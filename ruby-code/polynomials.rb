@@ -46,6 +46,21 @@ class Polynomial
 	end
 end
 
+class P
+	attr_accessor :poly, :root_num
+end
+
+# A valid irreducible polynomial
+VALID_POLYNOMIAL = /x\^?/x
+
+# The polynomial root class defines a single number that is the solution to a polynomial
+class P
+	attr_accessor :poly, :rootn
+end
+
+# A valid polynomial number
+VALID_P = /#{VALID_POLYNOMIAL}:[0-9]+/
+
 if __FILE__ == $0
 	puts "Hello World!"
 	poly = Polynomial.new([3, 4, 5])
