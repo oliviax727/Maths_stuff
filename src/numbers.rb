@@ -7,31 +7,77 @@ end
 # Abstract single-dimension object
 class Scalar < Numeric
 	# A basic real number value
-	attr_accessor :value
+	attr_accessor :n
 	
 	# Create the value
-	def initialize(value)
-		if value.is_a? String
-			@value = value.from_s(value)
+	def initialize(n)
+		if n.is_a? String
+			@n = Scalar.from_s(n)
 		else
-			@value = Float(value)
+			@n = Integer(n)
 		end
 	end
-
+	
 	# String conversion
-	def to_s() = @value.to_s
-
-	def from_s(str) = eval str
+	def to_s(); @n.to_s; end
+	def from_s(str); Scalar.new(eval str); end
 	
 	# Basic Arithmetic
-	def +(num) = @value + num.value
-	def -(num) = @value - num.value
-	def *(num) = @value * num.value
-	def /(num) = @value / num.value
-
+	def +(m); Scalar.new(@n + m.n); end
+	def -(m); Scalar.new(@n - m.n); end
+	def *(m); Scalar.new(@n * m.n); end
+	def /(m)
+		Scalar.new(@n / m.n)
+	end
+	
 	# Extended Arithmetic
-	def abs(num) = @value.abs
-	def %(num) = @value
+	def abs(); Scalar.new(@n.abs); end
+	def %(m); Scalar.new(@n % m.n); end
+	def div(); Scalar.new(@n.div(m.n)); end
+	def **(m); Scalar.new(@n ** m.n); end
+	
+	# Complex Arithmetic
+	def mag(); Scalar.new(@n.abs); end
+	def arg(); Scalar.new(@n.arg); end
+	def conj(); self; end
+	def sgn(); Scalar.new(@n.negative? ? -1 : 1); end
+end
+
+class Pair
+	attr_accessor :x, :y
+	
+	# Create a pair
+	def initialize(x, y = "")
+		if x.is_a? Scalar and y.is_a? Scalar
+			@x = x
+			@y = y
+		elsif x.is_a? String
+			@x = Pair.from_s(x)
+		end
+	end
+	
+	# String conversion
+	def to_s(); "(" + @x.to_s + ", " + @y.to_s + ")"; end
+	def from_s(str); eval str; end
+	
+	# Basic Arithmetic
+	def +(m); Pair.new(@n + m.n); end
+	def -(m); Pair.new(@n - m.n); end
+	def *(m); Pair.new(@n * m.n); end
+	def /(m)
+		Pair.new(@n / m.n)
+	end
+	
+	# Extended Arithmetic
+	def abs(); Pair.new(@n.abs); end
+	def %(m); Pair.new(@n % m.n); end
+	def div(); Pair.new(@n.div(m.n)); end
+	def **(m); Pair.new(@n ** m.n); end
+	
+	# Complex Arithmetic
+	def mag(); Pair.new(@n.abs); end
+	def arg(); Pair.new(@n.arg); end
+	def conj(); self; end
 end
 
 # Natural number class
@@ -41,7 +87,6 @@ class N < Scalar
 	def to_s()
 		return @value.to_s
 	end
-	
 	
 end
 
