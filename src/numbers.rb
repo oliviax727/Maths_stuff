@@ -1,39 +1,41 @@
 #!/usr/bin/ruby
 
-def clear_whitespace
+def clear_whitespace()
 	# Clears all \s in a string with nothing
 end
 
-class Real
+# Abstract single-dimension object
+class Scalar < Numeric
 	# A basic real number value
 	attr_accessor :value
 	
 	# Create the value
 	def initialize(value)
 		if value.is_a? String
-			@value = value.from_s
-		elsif value.method_defined? :to_int
-			@value = value.to_int
+			@value = value.from_s(value)
 		else
-			throw ParseError
+			@value = Float(value)
 		end
 	end
+
+	# String conversion
+	def to_s() = @value.to_s
+
+	def from_s(str) = eval str
 	
-	def from_s(value)
-		return eval value
-	end
-	
-	def +(num)
-		return @value + num.value
-	end
-	
-	def -(num)
-		return @value - num.value
-	end
+	# Basic Arithmetic
+	def +(num) = @value + num.value
+	def -(num) = @value - num.value
+	def *(num) = @value * num.value
+	def /(num) = @value / num.value
+
+	# Extended Arithmetic
+	def abs(num) = @value.abs
+	def %(num) = @value
 end
 
 # Natural number class
-class N < Real
+class N < Scalar
 	attr_accessor :value
 	
 	def to_s()
@@ -87,4 +89,6 @@ VALID_COMPLEX =/#{VALID_C}|#{VALID_REAL}/x
 if __FILE__ == $0
 	puts VALID_Z
 	puts VALID_N
+	test_scalar = Scalar.new(3)
+	p test_scalar
 end

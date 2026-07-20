@@ -54,7 +54,7 @@ VALID_POLYNOMIAL = /x\^?/x
 VALID_P = /#{VALID_POLYNOMIAL}:[0-9]+/
 
 # The polynomial root class defines a single number that is the solution to a polynomial
-class P
+class P < Numeric
 	attr_accessor :poly, :rootn
 end
 
