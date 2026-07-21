@@ -33,7 +33,7 @@ class Scalar < Numeric
 	# Extended Arithmetic
 	def abs(); Scalar.new(@n.abs); end
 	def %(m); Scalar.new(@n % m.n); end
-	def div(); Scalar.new(@n.div(m.n)); end
+	def div(m); Scalar.new(@n.div(m.n)); end
 	def **(m); Scalar.new(@n ** m.n); end
 	
 	# Complex Arithmetic
@@ -43,40 +43,70 @@ class Scalar < Numeric
 	def sgn(); Scalar.new(@n.negative? ? -1 : 1); end
 end
 
-class Pair
-	attr_accessor :x, :y
+class Vector < Numeric
+	attr_accessor :v
 	
 	# Create a pair
-	def initialize(x, y = "")
-		if x.is_a? Scalar and y.is_a? Scalar
-			@x = x
-			@y = y
-		elsif x.is_a? String
-			@x = Pair.from_s(x)
+	def initialize(v)
+		if v.is_a? Array
+			@v = v
+		elsif v.is_a? String
+			@v = Vector.from_s(v)
 		end
 	end
 	
+	# Looping methods
+	def reduce(init, _do)
+		acc = init
+		for vi in @v do
+			acc = _do(acc, vi)
+		end
+		return acc
+	end
+	
+	def map(_do)
+		w = Array.new()
+		@v.each_with_index do |i|
+			w[i] = _do(v[i])
+		end
+		return Vector.new(w)
+	end
+	
+	def zip(u, _do)
+		w = Array.new()
+		if u.is_a? Vector
+			@v.each_with_index do |i|
+				w[i] = _do(@v[i], u.v[i])
+			end
+		else
+			@v.each_with_index do |i|
+				w[i] = _do(@v[i], u)
+			end
+		end
+		return Vector.new(w)
+	end
+	
 	# String conversion
-	def to_s(); "(" + @x.to_s + ", " + @y.to_s + ")"; end
+	def to_s(); "[" + this.reduce("", lambda { |vi| return vi + ", " }) + "]"; end
 	def from_s(str); eval str; end
 	
 	# Basic Arithmetic
-	def +(m); Pair.new(@n + m.n); end
-	def -(m); Pair.new(@n - m.n); end
-	def *(m); Pair.new(@n * m.n); end
-	def /(m)
-		Pair.new(@n / m.n)
+	def +(u); this.zip(u, lambda { |a, b| return a + b }); end
+	def -(u); this.zip(u, lambda { |a, b| return a - b }); end
+	def *(u); this.zip(u, lambda { |a, b| return a * b }); end
+	def /(u)
+		this.zip(u, lambda { |a, b| return a / b })
 	end
 	
 	# Extended Arithmetic
-	def abs(); Pair.new(@n.abs); end
-	def %(m); Pair.new(@n % m.n); end
-	def div(); Pair.new(@n.div(m.n)); end
-	def **(m); Pair.new(@n ** m.n); end
+	def abs(); this.map(abs); end
+	def %(m); this.zip(u, lambda { |a, b| return a % b }); end
+	def div(m); this.zip(u, lambda { |a, b| return a.div(b) }); end
+	def **(m); this.zip(u, lambda { |a, b| return a ** b }); end
 	
 	# Complex Arithmetic
-	def mag(); Pair.new(@n.abs); end
-	def arg(); Pair.new(@n.arg); end
+	def mag(); this.reduce(lambda { |vi| return vi ** Scalar.new(2) }) ** Scalar.new(0.5); end
+	def arg(); 8; end
 	def conj(); self; end
 end
 
