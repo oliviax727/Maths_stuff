@@ -4,45 +4,6 @@ def clear_whitespace()
 	# Clears all \s in a string with nothing
 end
 
-# Abstract single-dimension object
-class Scalar < Numeric
-	# A basic real number value
-	attr_accessor :n
-	
-	# Create the value
-	def initialize(n)
-		if n.is_a? String
-			@n = Scalar.from_s(n)
-		else
-			@n = Integer(n)
-		end
-	end
-	
-	# String conversion
-	def to_s(); @n.to_s; end
-	def from_s(str); Scalar.new(eval str); end
-	
-	# Basic Arithmetic
-	def +(m); Scalar.new(@n + m.n); end
-	def -(m); Scalar.new(@n - m.n); end
-	def *(m); Scalar.new(@n * m.n); end
-	def /(m)
-		Scalar.new(@n / m.n)
-	end
-	
-	# Extended Arithmetic
-	def abs(); Scalar.new(@n.abs); end
-	def %(m); Scalar.new(@n % m.n); end
-	def div(m); Scalar.new(@n.div(m.n)); end
-	def **(m); Scalar.new(@n ** m.n); end
-	
-	# Complex Arithmetic
-	def mag(); Scalar.new(@n.abs); end
-	def arg(); Scalar.new(@n.arg); end
-	def conj(); self; end
-	def sgn(); Scalar.new(@n.negative? ? -1 : 1); end
-end
-
 class Vector < Numeric
 	attr_accessor :v
 	
@@ -91,7 +52,7 @@ class Vector < Numeric
 	def from_s(str); eval str; end
 	
 	# Basic Arithmetic
-	def +(u); this.zip(u, lambda { |a, b| return a + b }); end
+	def +(u); self.zip(u, lambda { |a, b| return a + b }); end
 	def -(u); this.zip(u, lambda { |a, b| return a - b }); end
 	def *(u); this.zip(u, lambda { |a, b| return a * b }); end
 	def /(u)
@@ -105,65 +66,61 @@ class Vector < Numeric
 	def **(m); this.zip(u, lambda { |a, b| return a ** b }); end
 	
 	# Complex Arithmetic
-	def mag(); this.reduce(lambda { |vi| return vi ** Scalar.new(2) }) ** Scalar.new(0.5); end
-	def arg(); 8; end
+	def mag(); this.reduce(lambda { |vi| return vi ** 2 }) ** 0.5; end
+	def arg(); this; end
 	def conj(); self; end
 end
 
 # Natural number class
-class N < Scalar
-	attr_accessor :value
+class N < Integer
+	# Any number containing digits from 0 to 9 is a valid decimal natural number
+	VALID_N = /[0-9]+/x
+end
+
+# Integer class
+class Z < Integer
+	# Any valid natural number with an optional preceeding minus sign is a valid integer
+	VALID_Z = /-?#{N::VALID_N}/x
+end
+
+# Rational number
+class Q < Vector
+	# Any valid integer followed by a slash and an optional divisor is a valid rational
+	VALID_Q = /#{Z::VALID_Z}\/(#{N::VALID_N})?/x
+end
+
+# Real Number
+class R < Vector
+	# Any valid integeger followed by a dot and an optional natural number expansion (either no
+	# recursion, partial recursion, or full recursion) is a valid real number
+	VALID_R = /(#{Z::VALID_Z})?\.(#{N::VALID_N})?(\(#{N::VALID_N}\))?/x
 	
-	def to_s()
-		return @value.to_s
-	end
+	# Combine all four real-valued classes into one
+	VALID_REAL = /#{N::VALID_N}|#{Z::VALID_Z}|#{Q::VALID_Q}|#{R::VALID_R}/x
+	
+	# Position at which reuccuring starts
+	attr_accessor :rn
+end
+
+
+# Complex Number
+class C < Vector
+	# Any two valid numbers from the N, Z, Q, and R classes with either entry including an i or j
+	# is a valid complex number. Also define a valid imaginary component.
+	# VALID_C accepts complex numbers of the form a+bi, ai+b, and ai
+	VALID_iR = /#{R::VALID_REAL}(i)/x
+	VALID_C = /(#{R::VALID_REAL}(\+|(?=-))#{C::VALID_iR})|(#{C::VALID_iR}(\+|(?=-))#{R::VALID_REAL})|(#{C::VALID_iR})/x
+	
+	# Combine everything
+	VALID_COMPLEX =/#{C::VALID_C}|#{R::VALID_REAL}/x
+end
+
+# Hypercomplex numbers
+class Hypercomplex < Vector
 	
 end
-
-# Any number containing digits from 0 to 9 is a valid decimal natural number
-VALID_N = /[0-9]+/x
-
-class Z
-	attr_accessor :value
-end
-
-# Any valid natural number with an optional preceeding minus sign is a valid integer
-VALID_Z = /-?#{VALID_N}/x
-
-class Q
-	attr_accessor :value
-end
-
-# Any valid integer followed by a slash and an optional divisor is a valid rational
-VALID_Q = /#{VALID_Z}\/(#{VALID_N})?/x
-
-class R
-	attr_accessor :value
-end
-
-# Any valid integeger followed by a dot and an optional natural number expansion (either no
-# recursion, partial recursion, or full recursion) is a valid real number
-VALID_R = /(#{VALID_Z})?\.(#{VALID_N})?(\(#{VALID_N}\))?/x
-
-class C
-	attr_accessor :real, :imag, :real_type, :imag_type
-end
-
-# Combine all four real-valued classes into one
-VALID_REAL = /#{VALID_N}|#{VALID_Z}|#{VALID_Q}|#{VALID_R}/x
-
-# Any two valid numbers from the N, Z, Q, and R classes with either entry including an i or j
-# is a valid complex number. Also define a valid imaginary component.
-# VALID_C accepts complex numbers of the form a+bi, ai+b, and ai
-VALID_iR = /#{VALID_REAL}(i|j)/x
-VALID_C = /(#{VALID_REAL}(\+|(?=-))#{VALID_iR})|(#{VALID_iR}(\+|(?=-))#{VALID_REAL})|(#{VALID_iR})/x
-
-# Combine everything
-VALID_COMPLEX =/#{VALID_C}|#{VALID_REAL}/x
 
 if __FILE__ == $0
-	puts VALID_Z
-	puts VALID_N
-	test_scalar = Scalar.new(3)
-	p test_scalar
+	test_scalar = Vector.new([3, 4])
+	p test_scalar + 3
 end
