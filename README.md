@@ -4,7 +4,7 @@ Just some little mathematics projects.
 
 ## Base Converter
 
-Written in Perl, it can convert any number in any complex-valued base to another. The program seeks to run in Haskell.
+Written in Haskell, it can convert any number in any complex-valued base to another.
 
 There are three inputs required. In order, they are:
 - The base of the provided number (“Input Base”)
