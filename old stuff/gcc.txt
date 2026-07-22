@@ -1,0 +1,4 @@
+cd ~/gcc-15
+mkdir gcc-15-build
+cd gcc-15-build
+../gcc-15-source/configure --prefix=/opt/gcc-15 --disable-multilib --enable-languages=c,c++
