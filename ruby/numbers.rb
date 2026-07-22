@@ -20,55 +20,69 @@ class Vector < Numeric
 	def reduce(init, _do)
 		acc = init
 		for vi in @v do
-			acc = _do(acc, vi)
+			acc = _do.call(acc, vi)
 		end
 		return acc
 	end
 	
+	def fold(init, _do)
+		w = Array.new()
+		acc = init
+		@v.each_with_index do |i|
+			acc = _do.call(acc, v[i])
+			w[i] = acc
+		end
+		return Vector.new(w)
+	end
+
 	def map(_do)
 		w = Array.new()
 		@v.each_with_index do |i|
-			w[i] = _do(v[i])
+			w[i] = _do.call(v[i])
 		end
 		return Vector.new(w)
 	end
 	
 	def zip(u, _do)
 		w = Array.new()
+		puts u.is_a? Vector
 		if u.is_a? Vector
 			@v.each_with_index do |i|
-				w[i] = _do(@v[i], u.v[i])
+				w[i] = _do.call(@v[i], u.v[i])
 			end
 		else
 			@v.each_with_index do |i|
-				w[i] = _do(@v[i], u)
+				w[i] = _do.call(@v[i], u)
 			end
 		end
 		return Vector.new(w)
 	end
 	
 	# String conversion
-	def to_s(); "[" + this.reduce("", lambda { |vi| return vi + ", " }) + "]"; end
+	def to_s(); "[" + self.reduce("", lambda { |vi| return vi + ", " }) + "]"; end
 	def from_s(str); eval str; end
 	
 	# Basic Arithmetic
-	def +(u); self.zip(u, lambda { |a, b| return a + b }); end
-	def -(u); this.zip(u, lambda { |a, b| return a - b }); end
-	def *(u); this.zip(u, lambda { |a, b| return a * b }); end
+	def +(u); return self.zip(u, lambda { |a, b| return a + b }); end
+	def -(u); return self.zip(u, lambda { |a, b| return a - b }); end
+	def *(u); return self.zip(u, lambda { |a, b| return a * b }); end
 	def /(u)
-		this.zip(u, lambda { |a, b| return a / b })
+		return self.zip(u, lambda { |a, b| return a / b })
 	end
 	
 	# Extended Arithmetic
-	def abs(); this.map(abs); end
-	def %(m); this.zip(u, lambda { |a, b| return a % b }); end
-	def div(m); this.zip(u, lambda { |a, b| return a.div(b) }); end
-	def **(m); this.zip(u, lambda { |a, b| return a ** b }); end
+	def abs(); return self.map(lambda { |vi| return vi.abs }); end
+	def %(m); return self.zip(u, lambda { |a, b| return a % b }); end
+	def div(m); return self.zip(u, lambda { |a, b| return a.div(b) }); end
+	def **(m); return self.zip(u, lambda { |a, b| return a ** b }); end
 	
 	# Complex Arithmetic
-	def mag(); this.reduce(lambda { |vi| return vi ** 2 }) ** 0.5; end
-	def arg(); this; end
-	def conj(); self; end
+	def mag(); self.reduce(lambda { |vi| return vi ** 2 }) ** 0.5; end
+	def arg()
+		args = self.fold(self.mag, lambda { |acc, vi| return Math.atan2((acc ** 2 - vi ** 2) ** 0.5, vi) }).v
+		return Vector.new(args[0, @v.length - 1])
+	end
+	def spherical(); return Vector.new([self.mag, *self.arg]); end
 end
 
 # Natural number class
