@@ -83,20 +83,20 @@ For bases with non-mixed radices whose radix values are greater than 64 OR inclu
 
 ### Special characters
 
-| Char | Use                    | Example                               |
-| ---- | ---------------------- | ------------------------------------- |
-| \|   | Mixed radix base       | `[45][0\|60]` seconds is `45` minutes |
-| i    | Imaginary number       | `4+i`                                 |
-| j    | Hyperbolic number      | `4+i+j`                               |
-| k    | Dual number            | `4e-2`                                |
-| i    | Imaginary number       | `4+i`                                 |
-| r    | Recurring value        | `1/3 = 0.r3`                          |
-| e    | Euler's Number         | `e = 2.71`                            |
-| p    | Pi                     | `p = 3.14`                            |
-| t    | Balanced ternary digit | `t = -1`                              |
-| l    | Null Character (Unary) | `l = 0`                               |
-| d | Degree separator | `33[45\|60][0\|60].r6` = `33d45d0.r6d` (33°45'00.666…") |
-| c | Calendar separator | `2026[8\|12][20\|31][15\|24][45\|60][0\|60].r6` = `2026c12c20c3d45d0.r6d` (2026-8-20 15:45:00:666…) |
+| Char | Use                    | Example                                                                                             |
+| ---- | ---------------------- | --------------------------------------------------------------------------------------------------- |
+| \|   | Mixed radix base       | `[45][0\|60]` seconds is `45` minutes                                                               |
+| i    | Imaginary number       | `4+i`                                                                                               |
+| j    | Hyperbolic number      | `4+i+j`                                                                                             |
+| k    | Dual number            | `4e-2`                                                                                              |
+| i    | Imaginary number       | `4+i`                                                                                               |
+| r    | Recurring value        | `1/3 = 0.r3`                                                                                        |
+| e    | Euler's Number         | `e = 2.71`                                                                                          |
+| p    | Pi                     | `p = 3.14`                                                                                          |
+| t    | Balanced ternary digit | `t = -1`                                                                                            |
+| l    | Null Character (Unary) | `l = 0`                                                                                             |
+| d    | Degree separator       | `33[45\|60][0\|60].r6` = `33d45d0.r6d` (33°45'00.666…")                                             |
+| c    | Calendar separator     | `2026[8\|12][20\|31][15\|24][45\|60][0\|60].r6` = `2026c12c20c3d45d0.r6d` (2026-8-20 15:45:00:666…) |
 
 ## Polynomial solver
 
